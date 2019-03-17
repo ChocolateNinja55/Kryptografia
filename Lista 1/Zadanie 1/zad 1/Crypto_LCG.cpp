@@ -62,7 +62,7 @@ int Crypto_LCG::Distinguisher_LCG_all_unknown(int *tab) {
 
 	/*for (j = 0; j < size; j++) {
 	
-	*/}
+	}*/
 }
 int *egcd(int elements, int modulus) {
 	int *temp = (int *)malloc(sizeof(int) * 3);
