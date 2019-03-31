@@ -48,24 +48,29 @@ int main() {
 		return 0;
 	}
 
-	crypto.init(seed, tab_size);
+	crypto.init(seed, tab_size); // seed
+	
 
-	while (is_the_same != true) {
+	//while (is_the_same != true) {
 	
 		crypto.glibc(); // mamy w tablicy wartoœci random z algorytmu glbc
 	
 		crypto.predict_glbc(start_frame,end_frame);
 		system("PAUSE");
-
+		crypto.distinguisher(start_frame, end_frame);
+		system("PAUSE");
+/*
 		if (glbic_tab[k] == predict_glbc_tab[k]) {
 		
 			is_the_same = true;
 			cout << "Wartoœci s¹ takie same!" << endl;
 			system("PASUE");
 		}
-		k++;
-		is_the_same = false;
-	}
+		*/
+	//	k++;
+	//	is_the_same = false;
+	//}
 	
+
 	return 0;
 }

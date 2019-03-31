@@ -6,17 +6,20 @@
 Crypto_LCG::Crypto_LCG(){}
 Crypto_LCG::~Crypto_LCG(){}
 //https://tailcall.net/blog/cracking-randomness-lcgs/
+
 int Crypto_LCG::LCG(int x, int a, int c, int m) {
 	int temp;
 	temp = (a * x + c) % m;
 	return temp;
 }
-int Crypto_LCG::Distinguisher_LCG_all(int x, int a, int c, int m) { //mamy wszystko
+
+int Crypto_LCG::Predict_LCG_all(int x, int a, int c, int m) { //mamy wszystko
 	int result;
 	result = (a * x + c) % m;
 	return result;
 }
-int Crypto_LCG::Distinguisher_LCG_unknown_c(int x, int y, int m, int a) { 
+
+int Crypto_LCG::Predict_LCG_unknown_c(int x, int y, int m, int a) { 
 	//c  = s1 - s0*m  (mod n)
 	//increment = (states[1] - states[0]*multiplier) % modulus
 
@@ -27,10 +30,11 @@ int Crypto_LCG::Distinguisher_LCG_unknown_c(int x, int y, int m, int a) {
 	var_1 = (y - x * a);
 	new_c = var_1 % m;
 
-	result = Distinguisher_LCG_all(y, a, new_c, m);
+	result = Predict_LCG_all(y, a, new_c, m);
 	return result;
 }
-int Crypto_LCG::Distinguisher_LCG_unknown_a_c(int x, int y, int z, int m) { 
+
+int Crypto_LCG::Predict_LCG_unknown_a_c(int x, int y, int z, int m) { 
 	//multiplier = (states[2] - states[1]) * modinv(states[1] - states[0], modulus) % modulus
 
 	int result;
@@ -42,28 +46,29 @@ int Crypto_LCG::Distinguisher_LCG_unknown_a_c(int x, int y, int z, int m) {
 	temp = modinv(var_3, m);
 	int var_2 = z - y;
 	var_1 = var_2 * temp;
-	new_a = std::modulus<int>()(var_1, m);
+	int xd = var_1 % m;
+	//new_a = std::modulus<int>()(var_1, m);
 
-	result = Distinguisher_LCG_unknown_c(x, y, m, new_a);
+	result = Predict_LCG_unknown_c(x, y, m, xd);
 	return result;
 }
-int Crypto_LCG::Distinguisher_LCG_all_unknown(int *tab) {
-	int diffrence;
-	int zero;
-	int modulus;
-	int i,j;
-	int *temp;
 
-	int size = sizeof(tab) / sizeof(int); // wielkoœæ tablicy
-	
-	for (i = 0; i < size; i++) { //"alokacja pamiêci"
-		temp[i] = 0;
+int Crypto_LCG::Predict_LCG_all_unknown(std::vector<int>data) {
+	std::vector<int>diff;
+	std::vector<int>zeros;
+
+	for (int i = 1; i < data.size(); i++) {
+diff.push_back(data[i] - data[i - 1]);
 	}
+		
 
-	/*for (j = 0; j < size; j++) {
-	
-	}*/
+	for (int j = 2; j < diff.size(); j++) 
+		zeros.push_back(diff[j] * diff[j - 2] - diff[j - 2] * diff[j - 2]);
+//	int mudulus = abs();
+
+	return 0;
 }
+
 int *egcd(int elements, int modulus) {
 	int *temp = (int *)malloc(sizeof(int) * 3);
 
@@ -84,7 +89,8 @@ int *egcd(int elements, int modulus) {
 	}
 // from https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm
 }
-int Crypto_LCG::modinv(int elements, int modulus) { //  = element 1 - element 0, b = modulus)
+
+int Crypto_LCG::modinv(int elements, int modulus) {
 
 	int *ptr;
 	ptr = egcd(elements, modulus);
@@ -92,3 +98,4 @@ int Crypto_LCG::modinv(int elements, int modulus) { //  = element 1 - element 0,
 	if (ptr[0] == 1)
 		return ptr[2] % modulus;
 }
+//ostatnie bity s¹ najmniej znacz¹ce i nie s¹ w pe³ni pseudolosowe

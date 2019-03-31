@@ -29,6 +29,7 @@ void Crypto::glibc() {
 		tab[i] = tab[i - 31] + tab[i - 3];
 	}
 }
+
 void Crypto::predict_glbc(int start_frame, int end_frame) {
 	int  k = start_frame;
 	int i,j;
@@ -84,6 +85,7 @@ void Crypto::predict_glbc(int start_frame, int end_frame) {
 			std::cout << predict[m] << std::endl;
 		}
 }
+
 void Crypto::init(int seed, int tab_size) { // inicjalizacja tablicy pod glbic
 	int i;
 
@@ -93,4 +95,38 @@ void Crypto::init(int seed, int tab_size) { // inicjalizacja tablicy pod glbic
 		else
 			tab.push_back(0);
 	}
+}
+
+void Crypto::distinguisher(int start_frame, int end_frame) {
+	std::vector<int>predict_value;
+	int temp_value1 = 0;
+	int temp_value2 = 0;
+	int temp_value_3 = 0;
+
+	for (int i = start_frame; i < end_frame; i++) {
+		temp_value1 = tab[i - 3];
+		temp_value2 = tab[i - 31];
+		temp_value_3 = ((temp_value2 + temp_value1) % (1u << 31));
+		predict_value.push_back(temp_value_3); // pierwszy bit od lewej strony
+	}
+
+	std::cout << "Distinguisher" << std::endl;
+	for (int j = 0; j < predict_value.size(); j++) {
+		std::cout << predict_value[j] << std::endl;
+	}
+	compare(tab, predict_value, start_frame, end_frame);
+}
+
+void Crypto::compare(std::vector<int>good_data, std::vector<int>maybe_good_data, int start_frame, int end_frame) {
+	int how_many = 0;
+	int size = maybe_good_data.size();
+
+	for (int i = start_frame; i < end_frame; i++) {
+		if (good_data[i] == maybe_good_data[i - start_frame]) {
+			std::cout << i << "\t" << good_data[i] << std::endl;
+			how_many++;
+		}	
+	}
+
+	std::cout << "Podobieñstwo: " << how_many/size << std::endl;
 }

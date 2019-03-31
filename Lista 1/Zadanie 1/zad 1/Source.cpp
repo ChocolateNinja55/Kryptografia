@@ -22,6 +22,7 @@ int main() {
 	vector<int>Predict_LCG_a_c;
 	vector<int>Predict_LCG_a_c_m;
 
+
 	int LCG_tab_size;
 	int Predict_LCG_size;
 
@@ -50,6 +51,7 @@ int main() {
 		Predict_LCG_c[i] = 0;
 		Predict_LCG_a_c[i] = 0;
 		Predict_LCG_a_c_m[i] = 0;
+
 	}
 
 	cout << "Kryptografia lista 1" << endl;
@@ -61,14 +63,14 @@ int main() {
 	cout << "Podaj wartoœæ modulo m: ";
 	cin >> m_variable;
 
-	while (if_the_same != true) { // zmieniæ warunek w pêtli na taki który umo¿liwi wyjœcie po osi¹gniêciu wyniku ¿e LCG = broke LCG
+	while (if_the_same != true) {
 		random = (int)rand() / (RAND_MAX + 1.0) * 100;
 		if (k == 0) {
 
 			LCG_tab.push_back(crypto.LCG(random, a_variable, c_variable, m_variable));
 			cout << "Wartoœæ LCG: " << LCG_tab[k] << endl;
 
-			Predict_LCG.push_back(crypto.Distinguisher_LCG_all(random, a_variable, c_variable, m_variable));
+			Predict_LCG.push_back(crypto.Predict_LCG_all(random, a_variable, c_variable, m_variable));
 			cout << "Wartoœæ przewidywana przez adwersarza - wszytsko znane: " << Predict_LCG[k] << endl;
 
 		}
@@ -77,32 +79,36 @@ int main() {
 			LCG_tab.push_back(crypto.LCG(LCG_tab[k-1], a_variable, c_variable, m_variable));
 			cout << "Wartoœæ LCG: " << LCG_tab[k] << endl;
 
-			Predict_LCG.push_back(crypto.Distinguisher_LCG_all(LCG_tab[k-1], a_variable, c_variable, m_variable));
+			Predict_LCG.push_back(crypto.Predict_LCG_all(LCG_tab[k-1], a_variable, c_variable, m_variable));
 			cout << "Wartoœæ przewidywana przez adwersarza - wszytsko znane: " << Predict_LCG[k] << endl;
 
 
-			if (k > 1) {
-				Predict_LCG_c.push_back(crypto.Distinguisher_LCG_unknown_c(LCG_tab[k-2], LCG_tab[k-1], m_variable, a_variable));
-				cout << "Wartoœæ przewidywana przez adwersarza - nieznane c: " << Predict_LCG_c[k-2] << endl;
+			if (k > 0) {
+				Predict_LCG_c.push_back(crypto.Predict_LCG_unknown_c(LCG_tab[k-1], LCG_tab[k], m_variable, a_variable));
+				cout << "Wartoœæ przewidywana przez adwersarza - nieznane c: " << Predict_LCG_c[k-1] << endl;
 			}
 			
 			if (k > 2) {
-				Predict_LCG_a_c.push_back(crypto.Distinguisher_LCG_unknown_a_c(LCG_tab[k - 3], LCG_tab[k - 2], LCG_tab[k-1], m_variable));
+				Predict_LCG_a_c.push_back(crypto.Predict_LCG_unknown_a_c(LCG_tab[k - 3], LCG_tab[k - 2], LCG_tab[k-1], m_variable));
 				cout << "wartoœæ przewidywana przez adwersarza - nieznane a,c: " << Predict_LCG_a_c[k-3] << endl;
 			}
+			if (k > 3) {
+				Predict_LCG_a_c_m.push_back(crypto.Predict_LCG_all_unknown(LCG_tab));
+			}
 
-			//Predict_LCG_a_c_m.push_back(crypto.Distinguisher_LCG_unknown_a_c_m(LCG_tab[]))
+			//Predict_LCG_a_c_m.push_back(crypto.Predict_LCG_unknown_a_c_m(LCG_tab[]))
 		}
 			
 		system("PAUSE");
-		//Sleep(1000);//zatrzymanie procesu by przeczytaæ liczbê
-		//	if (LCG_tab[k] == Predict_LCG[k]){// && LCG_tab[k] == Predict_LCG_m[k]) {
-		//		if_the_same = true;
-		//		cout << "Wartoœci s¹ takie same!" << endl;
-		//	}
-		//else
-			if_the_same = false;
+		/*Sleep(1000);//zatrzymanie procesu by przeczytaæ liczbê
+			if (LCG_tab[k] == Predict_LCG[k]){// && LCG_tab[k] == Predict_LCG_m[k]) {
+				if_the_same = true;
+				cout << "Wartoœci s¹ takie same!" << endl;
+			}
+		else
+			if_the_same = false;*/
 		k++;
+		
 	}
 	
 	if_the_same = false;
