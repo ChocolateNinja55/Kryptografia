@@ -26,16 +26,12 @@ std::vector<int>Crypto::KSA(int N_variable, int T_variable, std::vector<int>key)
 	int j = 0;
 	int i = 0;
 	int lenght_key;
-	std::string cos;
 
 	std::vector<int>S_value;
 	std::vector<int>return_value;
 	lenght_key = key.size()/8;
-	
-	//std::string binary = std::bitset<32>(key.size()).to_string();
-	//lenght_key = binary.size();
 
-	for  (i = 0; i < N_variable; i++) //N-1
+	for  (i = 0; i < N_variable; i++) 
 		S_value.push_back(i);
 
 	for (i = 0; i < T_variable; i++) {
@@ -95,6 +91,30 @@ std::vector<int>Crypto::KSA_RS(int N_variable, int T_variable, std::vector<int>k
 	return S_value;
 }
 
+//do poprawy
+std::vector<int>Crypto::RC4_SST(int N_variable, std::vector<int>key) {
+	int j = 0;
+	int i = 0;
+	int lenght_key;
+
+	std::vector<int>S_value;
+	std::vector<int>return_value;
+	lenght_key = key.size() / 8;
+
+	for (i = 0; i < N_variable; i++)
+		S_value.push_back(i);
+
+	for (i = 0; i < N_variable; i++) {
+		j = (j + S_value[i % N_variable] + key[i % lenght_key]) % N_variable;
+		if (i > ((i - 1) / 2)) {
+			if(S_value[i] )
+		}
+		std::swap(S_value[i % N_variable], S_value[j % N_variable]);
+	}
+	//copy and paste KSA
+	return return_value;
+}
+
 std::vector<int>Crypto::Generate_key(int sizeof_key, int seed){
 	std::vector<int>return_value;
 	std::vector<int>temp_value;
@@ -121,8 +141,13 @@ std::vector<int>Crypto::RC4_RS(int N_variable, int T_variable, std::vector<int>k
 	return PRGA(N_variable, temp,how_many);
 }
 
-//do zrobienia
-//std::vector<int>Crypto::RC4_SST(int N_variable, int T_variable, std::vector<int>key) { // do zrobienia}
+std::vector<int>Crypto::RC4_SST_end(int N_variable, std::vector<int>key, int how_many) {
+	std::vector<int>temp;
+	std::vector<int>return_value;
+	temp = RC4_SST(N_variable, key);
+
+	return return_value = PRGA(N_variable, temp, how_many);
+}
 
 std::vector<int>Crypto::RC4_with_drop(int N_variable, int T_variable, int D_value, std::vector<int>key, int how_many) {
 	std::vector<int>temp;

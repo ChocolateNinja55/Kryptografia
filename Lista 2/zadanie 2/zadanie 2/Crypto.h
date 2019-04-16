@@ -13,7 +13,8 @@ public:
 
 	std::vector<int>RC4(int N_variable, int T_variable, std::vector<int>key, int how_many);
 	std::vector<int>RC4_RS(int N_variable, int T_variable, std::vector<int>key, int how_many);
-	std::vector<int>RC4_SST(int N_variable, int T_variable, std::vector<int>key);
+	std::vector<int>RC4_SST_end(int N_variable, std::vector<int>key, int how_may);
+	std::vector<int>RC4_SST(int N_variable, std::vector<int>key);
 
 	std::vector<int>RC4_with_drop(int N_variable, int T_variable, int D_value, std::vector<int>key, int how_many);
 	std::vector<int>RC4_RS_with_drop(int N_variable, int T_variable, int D_value, std::vector<int>key, int how_many);
